@@ -28,7 +28,7 @@ def text_split(input_file, output_file, keyword):
             else:
                 if current_file is not None:
                     # 寻找提取文本的末尾（以下一个标题为末尾）
-                    for key in keywords:
+                    for key in keywords and key != keyword:
                         if key in line:
                             current_file.close()
                     # 若未找到，则写入当前行
