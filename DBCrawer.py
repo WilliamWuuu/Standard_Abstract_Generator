@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import re
+from time import sleep
 
 
 def clean_filename(filename):
@@ -14,10 +15,16 @@ def clean_filename(filename):
 # 模拟浏览器打开动态网页获取pdf文件链接id目录
 driver = webdriver.Edge()
 driver.get("https://dbba.sacinfo.org.cn/stdList")
+
 link_list = []
-driver.implicitly_wait(10)
-for link in driver.find_elements(By.XPATH, "//tr//a[@href]"):
-    link_list.append(link.get_attribute('href'))
+driver.implicitly_wait(30)
+
+for n in range(10):
+    for link in driver.find_elements(By.XPATH, "//tr//a[@href]"):
+        link_list.append(link.get_attribute('href'))
+    next_page = driver.find_element(By.XPATH, '//li[@class="page-item page-next"]//a[@class="page-link"]')
+    next_page.click()
+    sleep(1)
 
 # 本地设置保存pdf文件的目录
 pdf_dir = "pdf_files"
@@ -31,28 +38,16 @@ for link in link_list:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (HTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
     }
 
-    for page in range(1, 2):
-        page = str(page)
-        data = {
-            "current": page,
-            "size": "15",
-            "key": "",
-            "ministry": "",
-            "industry": "",
-            "pubdate": "",
-            "date": "",
-            "status": "现行",
-        }
+    # 发送请求并获取响应
+    response = requests.get(url=url, headers=headers)
 
-        # 发送请求并获取响应
-        response = requests.get(url=url, headers=headers)
+    # 使用BeautifulSoup解析响应内容
+    soup = BeautifulSoup(response.text, "html.parser")
 
-        # 使用BeautifulSoup解析响应内容
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # 查找 <a> 标签，找到链接到 PDF 文件的元素
-        pdf_link = soup.find("a", title="点击查看标准全文")
-        pdf_name_link = soup.find("b")
+    # 查找 <a> 标签，找到链接到 PDF 文件的元素
+    pdf_link = soup.find("a", title="点击查看标准全文")
+    pdf_name_link = soup.find("b")
+    if pdf_link != None:
         pdf_relative_url = pdf_link["href"]
 
         # 添加协议部分
@@ -69,4 +64,3 @@ for link in link_list:
         with open(os.path.join(pdf_dir, pdf_filename), "wb") as f:
             f.write(pdf_response.content)
             print(f"已下载 PDF 文件：{pdf_filename}")
-
