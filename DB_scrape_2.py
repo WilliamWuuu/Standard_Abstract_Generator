@@ -21,7 +21,6 @@ driver.implicitly_wait(30)
 for n in range(5):
     for link in driver.find_elements(By.XPATH, "//tr//a[@href]"):
         link_list.append(link.get_attribute('href'))
-    sleep(1)
     next_page = driver.find_element(By.XPATH, '//a[@class="page-link"]')
     next_page.click()
     sleep(1)
