@@ -4,9 +4,11 @@ This repository contains the code and data for **Auto Standard Generator**, a fi
 
 ---
 
+## 🎉 News
+- [x] [2023.3.25] 👏👏**Gather Raw Data**: scrape PDF technical standards.
+- [x] [2023.3.25] 📢📢**Cleaning & Preprocessing**: batch process text for dataset.
+
 ## 👉 TODO 
-- [ ] **Gather Raw Data**: scrape PDF technical standards.
-- [ ] **Cleaning & Preprocessing**: batch process text for dataset.
 - [ ] **Labeling the Data**: build instruction data for fine-tuning.
 - [ ] **Fine-tuning**
 - [ ] **Acceleration & Compression**
