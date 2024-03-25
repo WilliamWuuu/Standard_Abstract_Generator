@@ -18,7 +18,7 @@ driver.get("https://dbba.sacinfo.org.cn/stdList")
 link_list = []
 driver.implicitly_wait(30)
 
-for n in range(5):
+for n in range(600):
     for link in driver.find_elements(By.XPATH, "//tr//a[@href]"):
         link_list.append(link.get_attribute('href'))
     next_page = driver.find_element(By.XPATH, '//li[@class="page-item page-next"]//a[@class="page-link"]')
