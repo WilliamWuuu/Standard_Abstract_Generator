@@ -5,8 +5,10 @@ from bs4 import BeautifulSoup
 import os
 import re
 from time import sleep
+from retrying import retry
 
 
+@retry(stop_max_attempt_number=10, wait_fixed=2000)
 def clean_filename(filename):
     # 移除文件名中的无效字符
     return re.sub(r'[<>:"/\\|?*]', '', filename)
@@ -19,12 +21,18 @@ driver.get("https://dbba.sacinfo.org.cn/stdList")
 link_list = []
 driver.implicitly_wait(30)
 
-for n in range(10):
+for n in range(242):
+    next_page = driver.find_element(By.XPATH, '//li[@class="page-item page-next"]//a[@class="page-link"]')
+    next_page.click()
+    driver.implicitly_wait(30)
+
+for n in range(30):
     for link in driver.find_elements(By.XPATH, "//tr//a[@href]"):
         link_list.append(link.get_attribute('href'))
     next_page = driver.find_element(By.XPATH, '//li[@class="page-item page-next"]//a[@class="page-link"]')
     next_page.click()
-    sleep(1)
+    # sleep(1)
+    driver.implicitly_wait(30)
 
 # 本地设置保存pdf文件的目录
 pdf_dir = "pdf_files"
@@ -47,7 +55,7 @@ for link in link_list:
     # 查找 <a> 标签，找到链接到 PDF 文件的元素
     pdf_link = soup.find("a", title="点击查看标准全文")
     pdf_name_link = soup.find("b")
-    if pdf_link != None:
+    if pdf_link is not None:
         pdf_relative_url = pdf_link["href"]
 
         # 添加协议部分
@@ -64,3 +72,4 @@ for link in link_list:
         with open(os.path.join(pdf_dir, pdf_filename), "wb") as f:
             f.write(pdf_response.content)
             print(f"已下载 PDF 文件：{pdf_filename}")
+
