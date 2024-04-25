@@ -5,13 +5,15 @@ This repository contains the code and data for **Auto Standard Generator**, a fi
 ---
 
 ## 🎉 News
-- [x] [2023.3.25] 👏👏**Gather Raw Data**: scrape PDF technical standards.
-- [x] [2023.3.25] 📢📢**Cleaning & Preprocessing**: batch process text for dataset.
+- [x] [2024.3.25] 👏👏**Gather Raw Data**: scraped PDF technical standards.
+- [x] [2024.3.25] 📢📢**Cleaning & Preprocessing**: batch processed text for dataset.
+- [x] [2024.4.23] 🛁🛁**Data Cleaning**: removed garbled text.
 
 ## 👉 TODO 
 - [ ] **Labeling the Data**: build instruction data for fine-tuning.
 - [ ] **Fine-tuning**
-- [ ] **Acceleration & Compression**
+- [ ] **Acceleration & Compression**: employ techniques of model acceleration and compression to reduce the inference latency and memory cost.
+- [ ] **GUI development**: develop users interface.
 
 ---
 
