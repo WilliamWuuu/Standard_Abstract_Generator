@@ -28,9 +28,9 @@ def pdf_to_text(pdf_file):
         return None
 
 # 存放pdf文件的绝对路径
-pdf_path = '/Users/wyx/Desktop/Python_Files/web/pdf_files'
+pdf_path = '/Users/wyx/Desktop/Python_Files/web/PDF'
 # 存放txt文件的绝对路径
-txt_path = '/Users/wyx/Desktop/Python_Files/web/text_files'
+txt_path = '/Users/wyx/Desktop/Python_Files/web/text_files1'
 
 # 遍历文件夹中的文件
 for filename in os.listdir(pdf_path):
