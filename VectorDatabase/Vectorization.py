@@ -1,11 +1,17 @@
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+from gensim.test.utils import common_texts
+
 import re
 import sys
 from ltp import LTP
 
+# 创建 Doc2Vec 模型
+documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(common_texts)]
+model = Doc2Vec(documents, seed=42 ,vector_size=5, window=2, min_count=1, workers=4)
+
 class Vectorization:
-    def __init__(self, filepath, embedding_model):
+    def __init__(self, filepath):
         self.path = filepath
-        self.model = embedding_model
         self.text_pure = str
         self.tokens = []
         self.vector = []
@@ -39,7 +45,7 @@ class Vectorization:
         """
         Embed the tokens into vector using gensim.
         """
-        self.vector = self.model.infer_vector(self.tokens)
+        self.vector = model.infer_vector(self.tokens)
         
     def vectorization(self):
         """

@@ -7,7 +7,7 @@ import numpy as np
 from Vectorization import Vectorization
 
 class VectorDatabase:
-    def __init__(self, db_path, embedding_model, dimension, **kwargs):
+    def __init__(self, db_path, dimension, **kwargs):
         """
         Initialize the database (with the given directory) and create required tables.
         
@@ -17,7 +17,6 @@ class VectorDatabase:
             dimension (int): The dimension of the stored vector.
         """
         self.db_path = db_path
-        self.model = embedding_model
         self.dimension = dimension
         self.index = faiss.IndexFlatL2(dimension)
         self.conn = sqlite3.connect(self.db_path)
@@ -50,7 +49,7 @@ class VectorDatabase:
             filepath (str): Path to the file waiting to be converted into vector and added to the database.
         """
         # Convert numpy array to binary data for SQLite storage
-        vector = np.array(Vectorization(file_path, self.model), dtype=np.float32)
+        vector = np.array(Vectorization(file_path), dtype=np.float32)
         vector_blob = vector.tobytes()
         self.cursor.execute('INSERT INTO vectors (filepath, vector) VALUES (?, ?)', (file_path, vector_blob))
         self.conn.commit()
