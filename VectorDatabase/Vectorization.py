@@ -40,6 +40,7 @@ class Vectorization:
         Embed the tokens into vector using gensim.
         """
         self.vector = embedding_model.infer_vector(self.tokens)
+
         
     def vectorization(self):
         """
