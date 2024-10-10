@@ -1,16 +1,18 @@
+from gensim.models.doc2vec import Doc2Vec
+
 import re
 import sys
 from ltp import LTP
 
+embedding_model = Doc2Vec.load("embedding_model.model")
+
 class Vectorization:
-    def __init__(self, filepath, embedding_model):
+    def __init__(self, filepath):
         self.path = filepath
-        self.model = embedding_model
         self.text_pure = str
         self.tokens = []
         self.vector = []
-        
-    # 去除标点符号    
+          
     def remove_punctuation(self):
         """
         Read and remove the punctuation from the given path.
@@ -25,7 +27,6 @@ class Vectorization:
         else:
             sys.exit("Type Error: Only support <.txt> file to be converted to vector now!")
 
-    # 进行分词
     def segmentation(self):
         """
         Apply segmentation to the pure text using ltp.
@@ -34,12 +35,11 @@ class Vectorization:
         seg_result = ltp.pipeline([self.text_pure], tasks = ["cws"], return_dict = False)
         self.tokens = seg_result[0][0]
 
-    # embedding
     def embedding(self):
         """
         Embed the tokens into vector using gensim.
         """
-        self.vector = self.model.infer_vector(self.tokens)
+        self.vector = embedding_model.infer_vector(self.tokens)
         
     def vectorization(self):
         """
