@@ -13,7 +13,6 @@ class VectorDatabase:
         
         Args:
             dp_path (str): Path to the database actually storing the data.
-            embedding_model (gensim.models.doc2vec): The model used for embedding.
             dimension (int): The dimension of the stored vector.
         """
         self.db_path = db_path
@@ -38,7 +37,7 @@ class VectorDatabase:
             dir_path = kwargs['dir_path']
             for filename in os.listdir(dir_path):
                 file_path = os.path.join(dir_path, filename)
-                self.add(file_path)
+                self.add_vector(file_path)
 
     def add_vector(self, file_path):
         """
@@ -48,7 +47,7 @@ class VectorDatabase:
             filepath (str): Path to the file waiting to be converted into vector and added to the database.
         """
         # Convert numpy array to binary data for SQLite storage
-        vector = np.array(Vectorization(file_path), dtype=np.float32)
+        vector = np.array(Vectorization(filepath=file_path).vectorization(), dtype=np.float32)
         vector_blob = vector.tobytes()
         self.cursor.execute('INSERT INTO vectors (filepath, vector) VALUES (?, ?)', (file_path, vector_blob))
         self.conn.commit()
@@ -76,14 +75,16 @@ class VectorDatabase:
         vecs_np = np.array(vecs, dtype=np.float32)
         self.index.add(vecs_np)
 
-    def search_vector(self, query_vector, k=5):
+    def search_vector(self, query_text, k=5):
         """
         Search for the k-nearest neighbors using FAISS.
         
         Args:
-            query_vector (NDArray[floating[_32Bit]]): The searching target.
+            query_text (str): The searching target.
             k (int): The number of the nearest neighbor returned. 
         """
+        query_vector = Vectorization(text=query_text).vectorization()
+        
         if self.index.ntotal == 0:
             self.load_faiss_index()
 

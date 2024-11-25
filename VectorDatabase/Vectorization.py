@@ -4,14 +4,24 @@ import re
 import sys
 from ltp import LTP
 
-embedding_model = Doc2Vec.load("embedding_model.model")
+embedding_model = Doc2Vec.load('/Users/wyx/Documents/Auto_Standard_Generator/VectorDatabase/embedding_model.model')
 
 class Vectorization:
-    def __init__(self, filepath):
-        self.path = filepath
+    def __init__(self, **kwargs):
+        
         self.text_pure = str
         self.tokens = []
         self.vector = []
+        
+        if kwargs:
+            if 'filepath' in kwargs.keys():
+                self.path = kwargs['filepath']
+                self.flag = 'FILE'
+            elif 'text' in kwargs.keys():
+                self.text = kwargs['text']
+                self.flag = 'TEXT'
+            else:
+                sys.exit("IOError: You seem to type in invalid arguments. Please try again.")
           
     def remove_punctuation(self):
         """
@@ -20,12 +30,19 @@ class Vectorization:
         Args:
             filepath (str): Path to the file waiting to be converted into vector.
         """
-        if self.path.endswith(".txt"):
-            with open(self.path, 'r', encoding='utf-8') as file:
-                text = file.read().strip()
-            self.text_pure = re.sub(r'[^\u4e00-\u9fa5\w\s]', '', text)
+        if self.flag == 'FILE':
+            if self.path.endswith(".txt"):
+                with open(self.path, 'r', encoding='utf-8') as file:
+                    text = file.read().strip()
+                self.text_pure = re.sub(r'[^\u4e00-\u9fa5\w\s]', '', text)
+            else:
+                sys.exit("Type Error: Only support <.txt> file to be converted to vector now!")
+        
+        elif self.flag == 'TEXT':
+            self.text_pure = re.sub(r'[^\u4e00-\u9fa5\w\s]', '', self.text.strip())
+            
         else:
-            sys.exit("Type Error: Only support <.txt> file to be converted to vector now!")
+            sys.exit("IOError: You seem to type in invalid arguments. Please try again.")
 
     def segmentation(self):
         """
