@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo.v1</title>
+    <link rel="stylesheet" href="static\plugins\bootstrap-3.4.1\bootstrap-3.4.1-dist\css\bootstrap.css">
+    <link rel="stylesheet" href="static\css\styles.css">
+
+</head>
+
+
+<body>
+    
+    <!--导航条-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              <img alt="找个图" src="static\img\屏幕截图 2024-11-25 212548.png" width="40" >
+        
+            </a>
+            <p class="navbar-text">
+              <strong>Demo.v1</strong>
+            </p>
+          </div>
+        </div>
+      </nav>
+
+
+    
+    <!--主体-->
+    <div class="jumbotron container">
+        
+        <div class="row">
+          
+            
+            <div class="column middle">
+
+              <div class="chat-container">
+                
+                <div id="response-area" class="response-area">
+                  
+                  <!--显示回答-->
+                  <p id="response"></p >
+  
+                </div>
+
+                <form id="chat-form">
+                    <textarea id="chat-input" placeholder="说点什么吧......"></textarea>
+                    <button class="btn btn-default" type="submit" id="submitBtn">Submit</button>
+                </form>
+        
+                
+            </div>
+            
+    <!--javascript-->    
+    <script src="static\plugins\jquery-3.7.1.js"></script>
+    <script src="static\js\jquery-3.7.1.min.js"></script>
+    <script>
+      document.getElementById('chat-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const input = document.getElementById('chat-input').value;
+          if (input.trim() === '') return;
+          
+          //获取响应区域
+          const responseArea = document.getElementById('response-area');
+          
+          //添加用户输入
+          const userMessage = document.createElement('div');
+          userMessage.innerHTML = `<strong>User:</strong> ${input}`;
+          responseArea.appendChild(userMessage);
+          
+          //清空输入框
+          document.getElementById('chat-input').value = '';
+          
+          //发送请求到服务器
+          fetch('/chat', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ message: input })
+          })
+          .then(response => response.json())
+          .then(data => {
+              const botMessage = document.createElement('div');
+              botMessage.innerHTML = `<strong>Model:</strong> ${data.response}`;
+              responseArea.appendChild(botMessage);
+              
+              //自动滚动到最新消息
+              responseArea.scrollTop = responseArea.scrollHeight;
+          });
+      });
+  </script>
+    
+
+</body>
+
+
+</html>
