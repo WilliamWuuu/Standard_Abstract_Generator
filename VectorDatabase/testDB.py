@@ -1,3 +1,5 @@
 from VectorDatabase import VectorDatabase
 
-myVectorDatabase = VectorDatabase("./VectorDatabase/vector_database.db", 64)
+database_path = ""
+
+myVectorDatabase = VectorDatabase(database_path, 64)
