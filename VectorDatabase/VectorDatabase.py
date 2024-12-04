@@ -3,6 +3,7 @@ import sys
 import sqlite3
 import faiss
 import numpy as np
+from datetime import datetime
 
 from Vectorization import Vectorization
 
@@ -39,18 +40,40 @@ class VectorDatabase:
                 file_path = os.path.join(dir_path, filename)
                 self.add_vector(file_path)
 
-    def add_vector(self, file_path):
+    def add_vector(self, **kwargs):
         """
         Add a new vector to the database.
         
         Args:
             filepath (str): Path to the file waiting to be converted into vector and added to the database.
         """
-        # Convert numpy array to binary data for SQLite storage
-        vector = np.array(Vectorization(filepath=file_path).vectorization(), dtype=np.float32)
-        vector_blob = vector.tobytes()
-        self.cursor.execute('INSERT INTO vectors (filepath, vector) VALUES (?, ?)', (file_path, vector_blob))
-        self.conn.commit()
+        if 'filepath' in kwargs:
+            file_path = kwargs['filepath']
+            vector = np.array(Vectorization(filepath=file_path).vectorization(), dtype=np.float32)
+            vector_blob = vector.tobytes()
+            self.cursor.execute('INSERT INTO vectors (filepath, vector) VALUES (?, ?)', (file_path, vector_blob))
+            self.conn.commit()
+        
+        elif 'text' in kwargs:
+            text = kwargs['text']
+
+            dir_path = "./model_result"
+            # Ensure the directory exists
+            os.makedirs(dir_path, exist_ok=True)
+
+            # Generate a filename with the current timestamp
+            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            file_name = f"{current_time}.txt"
+            file_path = os.path.join(dir_path, file_name)
+
+            # Write the text to the file
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(text)
+                
+            vector = np.array(Vectorization(text=text).vectorization(), dtype=np.float32)
+            vector_blob = vector.tobytes()
+            self.cursor.execute('INSERT INTO vectors (filepath, vector) VALUES (?, ?)', (file_path, vector_blob))
+            self.conn.commit()
 
     def _get_all_vectors(self):
         """
