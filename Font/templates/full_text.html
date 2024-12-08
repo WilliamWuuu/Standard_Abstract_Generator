@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全文生成</title>
+    <link rel="stylesheet" href="static/plugins/bootstrap-3.4.1/bootstrap-3.4.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="static/css/full_text_styles.css">
+</head>
+
+<body>
+    <!--导航条-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img alt="找个图" src="static\img\导航条logo.png" width="40">
+                </a>
+                <p class="navbar-text">
+                    <strong> Auto Standard Generator v1.0 - 全文生成</strong>
+                </p>
+            </div>
+        </div>
+    </nav>
+
+    <!--主体-->
+    <div class="jumbotron container">
+        <div class="row">
+            <div class="column middle">
+                <div class="chat-container">
+                    <div id="response-area" class="response-area">
+                        <!--显示回答-->
+                        <p id="response"></p>
+                    </div>
+
+                    <!-- 生成全文功能 -->
+                    <form id="chat-form">
+                        <textarea id="keyword-input" placeholder="请输入关键词..." rows="3" class="chat-input"></textarea>
+                        <textarea id="summary-input" placeholder="请输入摘要..." rows="5" class="chat-input"></textarea>
+                        
+                        <button class="btn btn-default" type="submit" id="submitBtn">提交</button>
+                    </form>
+
+                    <!-- 返回首页按钮 -->
+                    <a href="{{ url_for('index') }}">
+                        <button class="btn btn-default">返回首页</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--JavaScript-->
+    <script src="static/plugins/jquery-3.7.1.js"></script>
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const keyword = document.getElementById('keyword-input').value;
+            const summary = document.getElementById('summary-input').value;
+            
+            //空输入不发送
+            if (keyword.trim() === '' || summary.trim() === '') return;  
+
+            const responseArea = document.getElementById('response-area');
+            const submitButton = document.getElementById('submitBtn');
+            submitButton.disabled = true;
+
+            //用户消息显示
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerHTML = `<img src="static/img/user.jpg" alt="用户图标"/><br><br>关键词：${keyword}<br>摘要：${summary}`;
+            responseArea.appendChild(userMessage);
+
+            //清空输入框
+            document.getElementById('keyword-input').value = '';
+            document.getElementById('summary-input').value = '';
+
+        setTimeout(function() {
+            //向后端发送请求
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    function: 'full_text',
+                    keyword: keyword,
+                    summary: summary,
+                    
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botMessage = document.createElement('div');
+                botMessage.className = 'bot-message';
+
+                //模型返回文本内容容器
+                const textContainer = document.createElement('div');
+                textContainer.className = 'text-container';
+                textContainer.innerHTML = `<img src="static/img/llm.jpg" alt="模型图标"><br><br>${data.response}`;
+
+                //创建复制按钮
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.innerText = '复制';
+
+                //监听复制按钮点击事件
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(data.response).then(() => {
+                        alert('已复制到剪切板');
+                    }).catch(err => {
+                        console.error('复制失败: ', err);
+                    });
+                });
+
+                //将文本容器和复制按钮添加到模型的回复框
+                botMessage.appendChild(textContainer);
+                botMessage.appendChild(copyButton);
+
+                responseArea.appendChild(botMessage);
+
+                //滚动到最新消息
+                responseArea.scrollTo({
+                    top: responseArea.scrollHeight,
+                    behavior: 'smooth'
+                });
+
+                submitButton.disabled = false;
+            })
+            .catch(error => {
+                const errorMessage = document.createElement('div');
+                errorMessage.innerHTML = `<strong>Error:</strong> 对不起，出了点问题。`;
+                responseArea.appendChild(errorMessage);
+
+                //滚动到最新消息
+                responseArea.scrollTo({
+                    top: responseArea.scrollHeight,
+                    behavior: 'smooth'
+                });
+
+                console.error(error);
+                submitButton.disabled = false;
+            });
+        }, 30000);
+    });
+    </script>
+</body>
+
+</html>

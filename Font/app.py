@@ -6,25 +6,47 @@ app = Flask(__name__)
 CORS(app)
 
 #服务器ip
-MODEl_URL = "http://10.249.44.91:5000/generate"
+MODEl_URL = "http://10.249.44.55:1234/generate"
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+@app.route('/full_text')
+def full_text_page():
+    return render_template('full_text.html')
+
+
+@app.route('/summary')
+def summary_page():
+    return render_template('summary.html')
+
+
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.json.get('message')
+    data = request.json
+    selected_function = data.get('function')
     
-    #向服务器发送请求
+    print(data)
+    
+    if selected_function == 'full_text':
+        keyword = data.get('keyword')
+        summary = data.get('summary')
+        request_data = {'keyword': keyword, 'summary': summary, 'function':'full_text'}
+
+    elif selected_function == 'summary':
+        keyword = data.get('keyword')
+        request_data = {'keyword': keyword, 'function':'summary'}
+    else:
+        return jsonify({'response': 'Error: Invalid function selected'})
+
     try:
-        response = requests.post(MODEl_URL, json={'input': user_input})
+        response = requests.post(MODEl_URL, json=request_data)
         response_data = response.json()
         
-        #从服务器获取模型的回答
         model_response = response_data.get('generated_text', 'Error: No response from model')
-        
         return jsonify({'response': model_response})
     
     except Exception as e:
@@ -32,3 +54,4 @@ def chat():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

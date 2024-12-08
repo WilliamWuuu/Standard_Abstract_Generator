@@ -1,0 +1,86 @@
+/*导航条*/
+.navbar {
+    background: rgb(32, 58, 135);
+    border-radius: 0;
+  }
+  
+  /*导航条图片*/
+  .navbar-header img {
+    width: auto;
+    height: 40px;
+    margin-right: 20px;
+  }
+  
+  /*导航条文字*/
+  .navbar-text strong {
+    font-size: 24px;
+    color: rgb(250, 249, 249);
+  }
+  
+  
+  body {
+    background-color: #b6cdfa;
+    color: #333;             
+  }
+  
+  
+  /*主体容器*/
+  .container{
+    width: 1000px;
+    height: 600px;
+    background-color: #b6cdfa;
+  }
+  
+  
+  /*主体边栏*/
+  .column {
+    float: left;
+    clear:both;
+    background-color: #b6cdfa;
+  }
+  
+  
+  
+  /*主体中间区域*/
+  .column.middle {
+    width: 50%;
+    background-color:white;
+  }
+
+  /*聊天容器*/
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 970px;
+    min-height: 500px;
+    padding: 20px;
+    background-color: #b6cdfa;
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+    position: relative;
+    top: 50%;
+    margin: auto;
+    
+}
+
+/*居中*/
+.center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.btn {
+  background-color: rgb(96, 142, 240);
+  color: black;
+  border-radius: 5px;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+}
+
+/*按钮悬停状态*/
+.btn:hover {
+  background-color: #19198a; 
+  color: #ddd;
+}

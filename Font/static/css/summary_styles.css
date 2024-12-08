@@ -1,0 +1,221 @@
+/*导航条*/
+.navbar {
+  background: rgb(32, 58, 135);
+  border-radius: 0;
+}
+
+/*导航条图片*/
+.navbar-header img {
+  width: auto;
+  height: 40px;
+  margin-right: 20px;
+}
+
+/*导航条文字*/
+.navbar-text strong {
+  font-size: 24px;
+  color: rgb(250, 249, 249);
+}
+
+
+body {
+  background-color: #b6cdfa;
+  color: #333;             
+}
+
+
+/*主体容器*/
+.container{
+  width: 1000px;
+  height: 600px;
+  background-color: #b6cdfa;
+}
+
+
+/*主体边栏*/
+.column {
+  float: left;
+  clear:both;
+  background-color: #b6cdfa;
+}
+
+
+
+/*主体中间区域*/
+.column.middle {
+  width: 50%;
+  background-color:white;
+}
+
+
+
+/*聊天容器*/
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 970px;
+    min-height: 500px;
+    padding: 20px;
+    background-color: #b6cdfa;
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+    position: relative;
+    top: 50%;
+    margin: auto;
+    
+}
+
+/*用户输入文本显示*/
+.user-message {
+  text-align: left;  /*消息右对齐*/
+  margin-bottom: 10px; /*消息间距*/
+  background-color: #d9f7d9; /*用户消息框背景色*/
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 80%;  /*消息框宽度*/
+  margin-left: auto; /*消息对齐右边*/
+  word-wrap: break-word; /*允许换行*/
+  white-space: pre-wrap; /*保证文本换行并且保留空格*/
+}
+
+/*用户图标*/
+.user-message img {
+  float: right;  /*图片右浮动*/
+  margin-left: 8px;
+  width: auto;
+  height: 30px;
+}
+
+/*模型返回文本容器*/
+.text-container {
+  padding-bottom: 30px; /*留出空间给复制按钮*/
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+
+/*模型回复文本显示*/
+.bot-message {
+  text-align: left;  /*消息左对齐*/
+  margin-bottom: 10px; /*消息间距*/
+  background-color: #c8d7f5; /*模型消息框背景色*/
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 80%;  /*消息框宽度*/
+  margin-right: auto; /*消息对齐左边*/
+  word-wrap: break-word;  /*允许换行*/
+  white-space: pre-wrap; /*保证输入内容换行并保留空格*/
+  box-sizing: border-box;
+}
+
+
+/*确保文本内容和按钮之间的距离*/
+.bot-message strong {
+  margin-bottom: 10px;
+}
+
+/*模型图标*/
+.bot-message img {
+  float: left;  /*图片左浮动*/
+  margin-right: 8px;
+  width: auto;
+  height: 30px;
+}
+
+.response-area {
+  flex-grow: 1; /*主区域占据剩余空间*/
+  overflow-y: auto; /*如果回答超出容器高度，可以滚动*/
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px; /*保持与输入框的间距*/
+  font-size: 16px;
+  height: 300px; /*设置固定高度*/
+  overflow-y: auto;  /*超出部分显示垂直滚动条*/
+  box-sizing: border-box; /*确保padding和border不影响总高度*/
+}
+ 
+
+
+  /*页面响应式布局*/
+  @media screen and (max-width: 600px) {
+    .column.side, .column.middle {
+      width: 100%;
+    }
+  }
+
+
+/*表单样式*/
+#chat-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/*文本框样式*/
+#chat-input {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        resize: none; /*禁止调整大小*/
+        width: 100%; 
+        height: 40px; 
+        outline: none;
+}
+
+/*当文本框获得焦点时，边框变为蓝色*/
+.chat-input:focus {
+    border-color: #007bff;
+}
+
+/*发送按钮*/
+.send-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+/*按钮*/
+.btn {
+  background-color: rgb(96, 142, 240);
+  color: black;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/*按钮悬停状态*/
+.btn:hover {
+  background-color: #19198a; 
+  color: #ddd;
+}
+
+
+/*模型回复复制按钮*/
+.copy-btn {
+  position: relative;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #95e998;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/*复制按钮悬停效果*/
+.copy-btn:hover {
+  background-color: #376e3a;
+}
+
+
